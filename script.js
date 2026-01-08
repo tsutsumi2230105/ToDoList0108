@@ -6,6 +6,7 @@ const todos = [];
 const showCheckedBtn = document.getElementById('showChecked');
 const showUncheckedBtn = document.getElementById('showUnchecked');
 const showAllBtn = document.getElementById('showAll');
+const deleteCheckedBtn = document.getElementById('deleteChecked');
 
 
 // Enterキーが押されたとき
@@ -109,6 +110,20 @@ input.addEventListener('keydown', (e) => {
       showAllBtn.addEventListener('click', () => {
       todos.forEach(p => p.style.display = 'block');
       });
+      
+      // 完了しているものを削除ボタンが押されたときの処理
+      deleteCheckedBtn.addEventListener('click', () => {
+
+        for (let i = todos.length - 1; i >= 0; i--) {
+          const p = todos[i];
+          const checkbox = p.querySelector('input[type="checkbox"]');
+          if (checkbox.checked) {
+          displayArea.removeChild(p);
+          todos.splice(i, 1); // 配列からも削除        
+          }
+        }
+         updateRemainingCount(); // ←削除後に残りアイテム数を更新
+     });
       
       //残りのアイテム数を表示する。
       const remainingCount = document.getElementById('remainingCount');
