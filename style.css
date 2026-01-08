@@ -1,53 +1,49 @@
-
-body{
-    background-color: #eee;
-
+body {
+  background-color: #eee;
 }
 
-h1{
-    color: red;
-    /* font-weight: bold; */
-    font-size: 70px;
-    text-align: center;
+h1 {
+  color: red;
+  /* font-weight: bold; */
+  font-size: 70px;
+  text-align: center;
 }
-
 
 #text-input::placeholder {
-    font-style: italic;
-    color: #999; /* お好みで薄い色に */
+  font-style: italic;
+  color: #999; /* お好みで薄い色に */
 }
 
-#text-input{
-    width: 800px;
-    height: 70px;
-    font-size: 28px;
-    display: block;
-    margin: 0 auto;
-    margin-top: 40px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+#text-input {
+  width: 800px;
+  height: 70px;
+  font-size: 28px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 40px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
 }
-
 
 #displayArea p {
-    font-size: 28px;
-    background-color: white; /* 背景色を追加 */
-    width: 800px;
-    height: 70px;
-    margin: auto;
-    display: flex;            /* フレックスボックス */
-    justify-content: center;  /* 横中央 */
-    align-items: center;      /* 縦中央 */
+  font-size: 28px;
+  background-color: white; /* 背景色を追加 */
+  width: 800px;
+  height: 70px;
+  margin: auto;
+  display: flex; /* フレックスボックス */
+  justify-content: center; /* 横中央 */
+  align-items: center; /* 縦中央 */
 }
 
 #displayArea button {
-    background-color: red; /* 背景色を追加 */
-    width: 100px;
-    height: 30px;
+  background-color: red; /* 背景色を追加 */
+  width: 100px;
+  height: 30px;
 }
 
-
-input,textarea {
-  border: none
+input,
+textarea {
+  border: none;
 }
 
 input:focus {
@@ -55,7 +51,6 @@ input:focus {
 }
 
 p {
-    font-size: 10px;
-    text-align: center;
+  font-size: 10px;
+  text-align: center;
 }
-
