@@ -1,61 +1,304 @@
+h1, h2, h3, p, ul, li, button {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: normal;
+  line-height: normal;
+}
+
+button {
+  all: unset;       /* すべてのデフォルトスタイルをリセット */
+  cursor: pointer;  /* クリック可能にするだけ追加 */
+  display: inline-block; /* 画像がちゃんと表示されるように */
+}
+
+/* チェックボックスのスタイルのリセット */
+/* すべてのチェックボックスのデフォルトスタイルを消す */
+input[type="checkbox"] {
+    -webkit-appearance: none; /* Safari/Chrome用 */
+    -moz-appearance: none;    /* Firefox用 */
+    appearance: none;         /* 標準 */
+    width: 24px;              /* サイズ調整 */
+    height: 24px;
+    cursor: pointer;
+    background-image: url('checkbox-off.png'); /* 未チェック画像 */
+    background-size: cover;
+    border: none;             /* 枠も消す */
+    vertical-align: middle;   /* テキストと横並びに */
+}
+
+
+/* チェックされたときの画像 */
+input[type="checkbox"]:checked {
+    background-image: url('checkbox-on.png'); /* チェック済み画像 */
+}
+
+
+
+
 
 body{
-    background-color: #eee;
-
+    background-color: #F5F5F5;
 }
+
 
 h1{
-    color: red;
-    /* font-weight: bold; */
-    font-size: 70px;
+    font-weight: normal; /* 太字を解除 */
+    font-size: 60px;
+    color: #b83f45;
+    font-family: 'Noto Serif JP', serif;
     text-align: center;
+    line-height: 20px; /* 文字を含めた1行の高さ */
+    margin : 40px auto;
 }
 
 
+/* ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー */
+/* テキスト入力フォーム */
 #text-input::placeholder {
-    font-style: italic;
+    font-style: 'Noto Serif JP', serif;
+ 
     color: #999; /* お好みで薄い色に */
 }
 
-#text-input{
-    width: 800px;
-    height: 70px;
-    font-size: 28px;
+/* テキスト入力フォームにフォーカスした時 */
+input:focus {
+  outline-color: #b83f45;
+}
+
+#text-input {
+    width: 550px;
+    height: 65px;
+    font-size: 20px;
+    font-weight: thin;
     display: block;
-    margin: 0 auto;
-    margin-top: 40px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    margin: 0;
+    padding: 16px 60px 16px 16px; /* 左に余白を取る */
+    box-sizing: border-box;       /* 高さにpaddingを含める */
+    border-bottom: 2px solid #d3d3d3; /* 下線だけ */
+    position: relative;
+    z-index: 20;   
+  }
+
+#inputWrapper {
+  position: relative; /* stacking context を作る */
+  z-index: 10;        /* 高めの値にする */
+  margin-top: 60px;
 }
 
 
 #displayArea p {
-    font-size: 28px;
-    background-color: white; /* 背景色を追加 */
-    width: 800px;
-    height: 70px;
-    margin: auto;
-    display: flex;            /* フレックスボックス */
-    justify-content: center;  /* 横中央 */
-    align-items: center;      /* 縦中央 */
+    font-size: 18px;
+    background-color: white;
+    width: 550px;
+    height: 65px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;  /* 左右に分ける */
+    align-items: center;             /* 縦中央 */
+    padding: 16px 16px;              /* フォームと揃える */
+    box-sizing: border-box;           /* 高さにpaddingを含める */
+    border-bottom: 1px solid #d3d3d3; /* グレーの線を追加 */
 }
 
-#displayArea button {
-    background-color: red; /* 背景色を追加 */
-    width: 100px;
-    height: 30px;
+.todo-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;                       /* チェックボックスとテキストの間 */
+    justify-content: flex-start;      /* 左端に寄せる */
 }
 
+#displayArea p span {
+    font-size: 18px;                 /* テキストサイズ調整 */
+}
+
+#displayArea p button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#displayArea {
+    width: 550px;
+    margin: 0 auto;   /* 上に余白をつけて中央 */
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background-color: white;           /* シャドウを見せるため背景は白 */
+    border-radius: 5px;                /* 角丸 */
+    overflow: hidden;                  /* 子の border-radius と重なる線を整理 */
+}
 
 input,textarea {
   border: none
 }
 
-input:focus {
-  outline-color: red;
+
+p {
+    line-height: 1;
+    color: #4d4d4d;
+    font-size: 11px;
+    text-align: center;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+}
+
+#showAll,
+#showChecked,
+#showUnchecked,
+#deleteChecked {
+  font-size: 12px;
+  color: #989898;
+}
+
+/* ホバー時だけ赤枠 */
+#showAll:hover,
+#showChecked:hover,
+#showUnchecked:hover {
+  border: 2px solid red;
+}
+
+/* クリック後に赤枠を維持 */
+button.active {
+  border: 2px solid #b83f45;
+}
+
+#showChecked:hover {
+  border: 2px solid #b83f45;/* ホバー時に赤い枠線 */
+}
+#showUnchecked:hover {
+  border: 2px solid #b83f45;/* ホバー時に赤い枠線 */
+}
+#deleteChecked:hover {
+  text-decoration: underline; /* ホバー時に下線 */
+}
+
+#buttonWrapper {
+    display: none;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: white;     /* 白背景 */
+    display: flex;               /* 横並び */
+    align-items: center;
+    width: 550px;       /* displayArea と同じ幅 */
+    margin: 0 auto;     /* 中央揃え */
+    box-sizing: border-box; /* padding込みで幅を計算 */
+
+  }
+#buttonWrapper button {
+    text-align: center;
+    padding: 4px;
+    border-radius: 5px;
+    background-color: white;
+    border: 2px solid transparent; /* 赤枠はactiveで付ける */
+    transition: border 0.2s;
+}
+
+/* ホバー時 */
+#buttonWrapper button:hover {
+    border: 2px solid #b83f45;
+}
+
+/* クリック後に赤枠を維持 */
+#buttonWrapper button.active {
+    border: 2px solid #b83f45;
+}
+
+#displayArea p button {
+    opacity: 0;              /* 普段は透明 */
+    transition: opacity 0.2s; /* フェードイン */
+}
+
+#displayArea p:hover button {
+    opacity: 1;              /* ホバー時に表示 */
+}
+
+#displayArea p {
+    margin: 0; /* 重要 */
+}
+
+#displayArea {
+    margin-bottom: 0; /* buttonWrapper との間の余白を消す */
+    gap: 0;           /* 子要素の間隔も消す */
 }
 
 p {
-    font-size: 10px;
-    text-align: center;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 
+#forshadow {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+  width: 550px;
+  margin: 0 auto;     /* 上下0、左右自動で中央 */
+}
+ /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);*/
+
+
+ #checkAll {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 30; /* 前面に表示 */
+}
+
+
+footer {
+  margin-top: 65px;
+}
+
+footer p{
+  color: #d3d3d3;
+}
+
+#buttonWrapper {
+  display: none;
+  align-items: center;
+  width: 550px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  box-sizing: border-box;
+}
+
+#filterButtons {
+  display: flex;
+  gap: 10px;
+  margin: 0 auto; /* ← 中央寄せ */
+}
+
+#checkAll {
+  display: none;   /* ← 追加 */
+}
+
+.delete-icon {
+  content: url('delete-icon.png');
+}
+
+#displayArea p button:hover .delete-icon {
+  content: url('delete-icon-hover.png');
+}
+
+#checkAll {
+  cursor: pointer;
+}
+
+/* ホバー時に画像切り替え */
+#checkAll:hover {
+  content: url("check-all-hover.png");
+}
+footer a {
+  color: #333;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

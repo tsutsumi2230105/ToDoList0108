@@ -1,59 +1,73 @@
-// HTML要素を取得
+// --------------------------
+// 要素取得
+// --------------------------
 const input = document.getElementById('text-input');
 const displayArea = document.getElementById('displayArea');
+const buttonWrapper = document.getElementById('buttonWrapper');
 
-const todos = [];
+const showAllBtn = document.getElementById('showAll');
 const showCheckedBtn = document.getElementById('showChecked');
 const showUncheckedBtn = document.getElementById('showUnchecked');
-const showAllBtn = document.getElementById('showAll');
 const deleteCheckedBtn = document.getElementById('deleteChecked');
+const remainingCount = document.getElementById('remainingCount');
+const checkAllBtn = document.getElementById('checkAll');
 
+const todos = [];
 let isComposing = false;
 
-input.addEventListener('compositionstart', () => {
-  isComposing = true;
-});
 
-input.addEventListener('compositionend', () => {
-  isComposing = false;
-});
+input.addEventListener('compositionstart', () => isComposing = true);
+input.addEventListener('compositionend', () => isComposing = false);
+
+function updateRemainingCount() {
+  const remaining = todos.filter(p => !p.querySelector('input[type="checkbox"]').checked).length;
+  remainingCount.textContent = remaining + ' items left';
+}
+
+function clearActive() {
+  showAllBtn.classList.remove('active');
+  showCheckedBtn.classList.remove('active');
+  showUncheckedBtn.classList.remove('active');
+}
 
 input.addEventListener('keydown', (e) => {
-  if (e.key !== 'Enter' || isComposing) return; // IME変換中は無視
+  if (e.key !== 'Enter' || isComposing) return;
 
   const value = input.value.trim();
-  if (!value) return; // 空文字は無視
+  if (!value) return;
 
-  // p要素作成
   const p = document.createElement('p');
 
-  // チェックボックス作成
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
 
-  // 削除ボタン作成
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.textContent = '削除';
-
-  // テキストspan作成
   const textSpan = document.createElement('span');
-  textSpan.textContent = ' ' + value;
+  textSpan.textContent = value;
 
-  // pに要素を追加
-  p.appendChild(checkbox);
-  p.appendChild(textSpan);
+  const leftDiv = document.createElement('div');
+  leftDiv.className = 'todo-left';
+  leftDiv.appendChild(checkbox);
+  leftDiv.appendChild(textSpan);
+
+  const button = document.createElement('button');
+  const img = document.createElement('img');
+  img.src = 'delete-icon.png';
+  img.className = 'delete-icon';
+  img.alt = '削除';
+  img.style.width = '20px';
+  img.style.height = '20px';
+  button.appendChild(img);
+
+  p.appendChild(leftDiv);
   p.appendChild(button);
 
-  // 表示領域に追加
   displayArea.appendChild(p);
   todos.push(p);
-  updateRemainingCount();
-
-  // 入力欄クリア
   input.value = '';
+  buttonWrapper.style.display = 'flex';
+  checkAllBtn.style.display = 'block';   // ← 追加
 
-  // チェックボックス変更
+  
   checkbox.addEventListener('change', () => {
     if (checkbox.checked) {
       textSpan.style.color = 'gray';
@@ -65,88 +79,81 @@ input.addEventListener('keydown', (e) => {
     updateRemainingCount();
   });
 
-  // 削除ボタン
   button.addEventListener('click', () => {
     displayArea.removeChild(p);
     todos.splice(todos.indexOf(p), 1);
     updateRemainingCount();
+
+    if (todos.length === 0) {
+  buttonWrapper.style.display = 'none';
+  checkAllBtn.style.display = 'none';   // ← 追加
+}
+  });
+
+  updateRemainingCount();
+});
+
+showAllBtn.addEventListener('click', () => {
+  clearActive();
+  showAllBtn.classList.add('active');
+  todos.forEach(p => p.style.display = '');
+});
+
+showCheckedBtn.addEventListener('click', () => {
+  clearActive();
+  showCheckedBtn.classList.add('active');
+  todos.forEach(p => {
+    const checkbox = p.querySelector('input[type="checkbox"]');
+    p.style.display = !checkbox.checked ? '' : 'none';
   });
 });
 
-      //すべて完了するボタン
-    const checkAllBtn = document.getElementById('checkAll');
+showUncheckedBtn.addEventListener('click', () => {
+  clearActive();
+  showUncheckedBtn.classList.add('active');
+  todos.forEach(p => {
+    const checkbox = p.querySelector('input[type="checkbox"]');
+    p.style.display = checkbox.checked ? '' : 'none';
+  });
+});
 
-      checkAllBtn.addEventListener('click', () => {
-        // 1. 未完了のタスクが1つでもあるか確認
-       const hasUnchecked = todos.some(p => {
-        const checkbox = p.querySelector('input[type="checkbox"]');
-        return !checkbox.checked;
-      });
+deleteCheckedBtn.addEventListener('click', () => {
+  for (let i = todos.length - 1; i >= 0; i--) {
+    const p = todos[i];
+    const checkbox = p.querySelector('input[type="checkbox"]');
+    if (checkbox.checked) {
+      displayArea.removeChild(p);
+      todos.splice(i, 1);
+    }
+  }
+  updateRemainingCount();
+  if (todos.length === 0) {
+  buttonWrapper.style.display = 'none';
+  checkAllBtn.style.display = 'none';   // ← 追加
+}
+});
 
-      todos.forEach(p => {
-        const checkbox = p.querySelector('input[type="checkbox"]');
-        const textSpan = p.querySelector('span');
-
-      if (hasUnchecked) {
-        // 未完了タスクがある場合 → すべて完了にする
-        checkbox.checked = true;
-        textSpan.style.color = 'gray';
-        textSpan.style.textDecoration = 'line-through';
-      } else {
-       // すべて完了済みの場合 → すべて未完了に戻す
-        checkbox.checked = false;
-        textSpan.style.color = 'black';
-        textSpan.style.textDecoration = 'none';
-      }
-    });
-
-    updateRemainingCount(); // 残りタスク数を更新
+checkAllBtn.addEventListener('click', () => {
+  const hasUnchecked = todos.some(p => {
+    const checkbox = p.querySelector('input[type="checkbox"]');
+    return !checkbox.checked;
   });
 
-      // 完了だけ標示するよボタンが押されたときの処理
-      showCheckedBtn.addEventListener('click', () => {
-        todos.forEach(p => {
-         const checkbox = p.querySelector('input[type="checkbox"]');
-         p.style.display = checkbox.checked ? '' : 'none'; // ←ここを '' に変更
-       });
-    });
+  todos.forEach(p => {
+    const checkbox = p.querySelector('input[type="checkbox"]');
+    const textSpan = p.querySelector('span');
 
-      // 未完了だけ標示するよボタンが押されたときの処理
-      showUncheckedBtn.addEventListener('click', () => {
-        todos.forEach(p => {
-          const checkbox = p.querySelector('input[type="checkbox"]');
-          p.style.display = !checkbox.checked ? '' : 'none';
-        });
-      });
-
-      // 全部表示するよボタンが押されたときの処理
-      showAllBtn.addEventListener('click', () => {
-      todos.forEach(p => p.style.display = '');
-      });
-      
-      // 完了しているものを削除ボタンが押されたときの処理
-      deleteCheckedBtn.addEventListener('click', () => {
-
-        for (let i = todos.length - 1; i >= 0; i--) {
-          const p = todos[i];
-          const checkbox = p.querySelector('input[type="checkbox"]');
-          if (checkbox.checked) {
-          displayArea.removeChild(p);
-          todos.splice(i, 1); // 配列からも削除        
-          }
-        }
-         updateRemainingCount(); // ←削除後に残りアイテム数を更新
-     });
-      
-      //残りのアイテム数を表示する。
-      const remainingCount = document.getElementById('remainingCount');
-
-    function updateRemainingCount() {
-       var remaining = todos.filter(function(p) {
-       var checkbox = p.querySelector('input[type="checkbox"]');
-       return !checkbox.checked; //チェックされていないものだけ数える
-     }).length;
-
-      remainingCount.textContent = '残りタスク: ' + remaining;
+    if (hasUnchecked) {
+      checkbox.checked = true;
+      textSpan.style.color = 'gray';
+      textSpan.style.textDecoration = 'line-through';
+    } else {
+      checkbox.checked = false;
+      textSpan.style.color = 'black';
+      textSpan.style.textDecoration = 'none';
     }
-      //(チェックされていないアイテム数の表示。)
+  });
+
+  updateRemainingCount();
+});
+
